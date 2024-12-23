@@ -79,6 +79,7 @@ class LanguageLineResource extends Resource
                         ->reorderable(false)
                         ->grid(2)
                         ->columnSpan(2)
+                        ->deletable(Gate::allows('admin-translation-manager'))
                         ->maxItems(count(config('translation-manager.available_locales'))),
                 ]),
             ]);

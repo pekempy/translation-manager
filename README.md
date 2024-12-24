@@ -1,3 +1,5 @@
+> Forked from https://github.com/kenepa/translation-manager
+
 # Translation Manager
 
 <a href="https://github.com/kenepa/translation-manager">
@@ -20,25 +22,28 @@ You can install the package via composer:
 Install via Composer.
 
 | Plugin Version | Filament Version | PHP Version |
-|----------------|-----------------|-------------|
-| <= 3.x         | 2.x   | \> 8.0      |
-| 4.x            | 3.x             | \> 8.1      |
+| -------------- | ---------------- | ----------- |
+| <= 3.x         | 2.x              | \> 8.0      |
+| 4.x            | 3.x              | \> 8.1      |
 
 ```bash
 composer require kenepa/translation-manager
 ```
 
 You can run the following command to publish the configuration file:
+
 ```bash
 php artisan vendor:publish --tag=translation-manager-config
 ```
 
 This package uses `spatie/laravel-translation-loader`, publish their migration file using:
+
 ```bash
 php artisan vendor:publish --provider="Spatie\TranslationLoader\TranslationServiceProvider" --tag="migrations"
 ```
 
 You have to update the migration file to the following:
+
 ```php
 Schema::create('language_lines', function (Blueprint $table) {
     $table->bigIncrements('id');
@@ -58,24 +63,23 @@ In order to compile the package views correctly, we need to [create a custom Fil
 ```js
 // Located at: /resources/css/filament/admin/tailwind.config.js
 
-import preset from '../../../../vendor/filament/filament/tailwind.config.preset';
+import preset from "../../../../vendor/filament/filament/tailwind.config.preset";
 
 export default {
-    presets: [preset],
-    content: [
-        // other content...
-        './vendor/kenepa/translation-manager/resources/**/*.blade.php',
-    ],
+  presets: [preset],
+  content: [
+    // other content...
+    "./vendor/kenepa/translation-manager/resources/**/*.blade.php",
+  ],
 };
 ```
-
 
 ## Register the plugin with a panel
 
 ```php
 use Kenepa\TranslationManager\TranslationManagerPlugin;
 use Filament\Panel;
- 
+
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -86,7 +90,6 @@ class AdminPanelProvider extends PanelProvider
     }
 }
 ```
-
 
 ## Authorization
 
@@ -101,18 +104,22 @@ use Illuminate\Support\Facades\Gate;
  * Bootstrap any application services.
  */
 public function boot(): void
-{   
+{
     Gate::define('use-translation-manager', function (?User $user) {
         // Your authorization logic
         return $user !== null && $user->hasRole('admin');
     });
 }
 ```
+
 If you want to learn more about gates, [check out the official documentation](https://laravel.com/docs/master/authorization#gates).
 
 ## Configuration
+
 #### `available_locales`
+
 Determines which locales your application supports. For example:
+
 ```php
 'available_locales' => [
     ['code' => 'en', 'name' => 'English', 'flag' => 'gb'],
@@ -122,11 +129,14 @@ Determines which locales your application supports. For example:
 ```
 
 #### `language_switcher`
+
 Enable or disable the language switcher feature. This allows users to switch their language - disable if you have your own implementation.  
 ![Language Switcher](https://raw.githubusercontent.com/kenepa/translation-manager/4.x/.github/language-switcher.png)
 
 #### `dont_register_navigation_on_panel_ids`
+
 Disable registering the translation manager navigation on certain panel IDs. The following will disable the translation navigation for the guest panel but still allow guest panel users to change the language.
+
 ```php
     'dont_register_navigation_on_panel_ids' => [
         'guest'
@@ -134,11 +144,13 @@ Disable registering the translation manager navigation on certain panel IDs. The
 ```
 
 ### Adding to cluster
+
 Example of adding the translation manager to a cluster:
+
 ```php
 // config/translation-manager.php
 [
-  // ...Other config   
+  // ...Other config
  'cluster' => \App\Filament\Clusters\Products::class,
 ]
 ```
@@ -146,7 +158,6 @@ Example of adding the translation manager to a cluster:
 ## Usage
 
 Once installed, the Translation Manager can be accessed via the Filament sidebar menu. Simply click on the "Translation Manager" link to access the translation management screen.
-
 
 ## License
 

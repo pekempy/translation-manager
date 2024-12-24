@@ -24,13 +24,20 @@ class EditLanguageLine extends EditRecord
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $data['text'] = [];
-
+        $existingTranslations = is_array($this->record->text) ? $this->record->text : [];
+        $existingEditors = json_decode($this->record->edited_by, true) ?? [];
+    
         foreach ($data['translations'] as $translation) {
             $data['text'][$translation['language']] = $translation['text'];
+            if (!isset($existingTranslations[$translation['language']]) || $existingTranslations[$translation['language']] !== $translation['text']) {
+                $existingEditors[$translation['language']] = auth()->user()->name;
+            }
         }
-
+    
+        $data['edited_by'] = $existingEditors;
+    
         unset($data['translations']);
-
+    
         return $data;
     }
 

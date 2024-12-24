@@ -58,12 +58,16 @@ class LanguageLineResource extends Resource
                     ->prefixIcon('heroicon-o-tag')
                     ->disabled(config('translation-manager.disable_key_and_group_editing'))
                     ->label(__('translation-manager::translations.group'))
+                    ->columnSpan(2)
+                    ->hidden()
                     ->required(),
 
                 TextInput::make('key')
                     ->prefixIcon('heroicon-o-key')
                     ->disabled(config('translation-manager.disable_key_and_group_editing'))
                     ->label(__('translation-manager::translations.key'))
+                    ->columnSpan(2)
+                    ->hidden()
                     ->required(),
 
                 ViewField::make('preview')
@@ -85,7 +89,8 @@ class LanguageLineResource extends Resource
                             ->label(__('translation-manager::translations.translation-text'))
                             ->columnSpanFull()
                             ->required(),
-                    ])->columns(2)
+                        ])
+                        ->columns(2)
                         ->addActionLabel(__('translation-manager::translations.add-translation-button'))
                         ->hiddenLabel()
                         ->defaultItems(0)

@@ -2,6 +2,7 @@
 
 namespace Kenepa\TranslationManager\Resources;
 
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -9,6 +10,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
@@ -17,7 +19,9 @@ use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\HtmlString;
 use Kenepa\TranslationManager\Filters\NotTranslatedFilter;
 use Kenepa\TranslationManager\Pages\QuickTranslate;
 use Kenepa\TranslationManager\Resources\LanguageLineResource\Pages\EditLanguageLine;
@@ -50,6 +54,12 @@ class LanguageLineResource extends Resource
         return trans_choice('translation-manager::translations.translation-label', 2);
     }
 
+    public static function getLastEditor(Model $record, string $language): ?string
+    {
+        $editedBy = json_decode($record->edited_by, true);
+        return $editedBy[$language] ?? null;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -74,9 +84,22 @@ class LanguageLineResource extends Resource
                     ->view('translation-manager::preview-translation')
                     ->disabled()
                     ->columnSpan(2),
-
+                
                 Section::make(__('translation-manager::translations.translations-header'))->schema([
                     Repeater::make('translations')->schema([
+                        Placeholder::make('placeholder')
+                            ->label(function (Get $get, Model $record) {
+                                $language = $get('language');
+                                $recordId = $record->id;
+                                $record = DB::table('language_lines')->find($recordId);
+                                if (!$record) { return 'Last Edited by: Unknown'; }
+                                $editedBy = json_decode($record->edited_by, true) ?? [];
+                                $editor = $editedBy[$language] ?? 'Unknown';
+                                $editedString = 'Last edited by: ' . $editor;
+                                return new HtmlString("<span class='text-sm text-gray-500'>$editedString</span>");
+                            })
+                            ->columnSpanFull()
+                            ->visible(Gate::allows('admin-translation-manager')),
                         Select::make('language')
                             ->prefixIcon('heroicon-o-language')
                             ->label(__('translation-manager::translations.translation-language'))

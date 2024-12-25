@@ -158,7 +158,9 @@ class LanguageLineResource extends Resource
                 })
                 ->getStateUsing(function (Model $record) {
                     return $record->group . '.' . $record->key;
-                }),
+                })
+                ->toggleable()
+                ->toggledHiddenByDefault(true),
 
             ViewColumn::make('preview')
                 ->view('translation-manager::preview-column')
@@ -180,6 +182,8 @@ class LanguageLineResource extends Resource
                 ->getStateUsing(function (LanguageLine $record) use ($localeCode) {
                     return in_array($localeCode, array_keys($record->text));
                 })
+                ->toggleable(fn() => $localeCode === "en" ? false : true)
+                ->toggledHiddenByDefault(true)
                 ->boolean();
         }
 

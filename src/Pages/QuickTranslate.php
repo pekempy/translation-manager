@@ -36,6 +36,11 @@ class QuickTranslate extends Page implements HasForms
     {
         return config('translation-manager.navigation_group');
     }
+    
+    public static function getNavigationSort(): ?int
+    {
+        return config('translation-manager.navigation_sort') + 1;
+    }
 
     public static function getNavigationLabel(): string
     {

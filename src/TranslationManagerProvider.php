@@ -63,6 +63,7 @@ class TranslationManagerProvider extends PackageServiceProvider
             'disable_key_and_group_editing' => ['required', 'boolean'],
             'language_switcher' => ['required', 'boolean'],
             'navigation_group' => ['nullable', 'string'],
+            'navigation_sort' => ['nullable', 'integer'],
         ]);
 
         $appValidator = Validator::make($appConfig, [

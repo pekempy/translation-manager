@@ -35,6 +35,7 @@ class LanguageLineResource extends Resource
     protected static ?string $model = LanguageLine::class;
     protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
     protected static ?string $slug = 'translation-manager';
+    protected static ?int $navigationSort = 1000;
 
     /**
      * @param  array<string, mixed>  $parameters
@@ -212,6 +213,11 @@ class LanguageLineResource extends Resource
     public static function getNavigationLabel(): string
     {
         return __('translation-manager::translations.translation-navigation-label');
+    }
+    
+    public static function getNavigationSort(): ?int
+    {
+        return config('translation-manager.navigation_sort');
     }
 
     public static function getNavigationIcon(): ?string
